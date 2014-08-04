@@ -7,17 +7,37 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
+
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+var configDB = require('./config/database.js');
 
 // configure db
- mongoose.connect('mongodb://localhost:27017/');
+mongoose.connect(configDB.URL);
 
+// DB Models
  var Bear = require('./app/models/bear');
 
-// configure app to use podyParser
+// authentication
+// require('./config/passport')(passport); //pass passport for configuration
+
+// configure app
+app.use(morgan('dev'));
+app.use(cookieParser());
 app.use(bodyParser());
 
-// set the port
-var port = process.env.PORT || 8080;
+// required for passport
+app.use(session({secret: 'aaaaaaaaaa'}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); // for flash messages stored in session
+
+// define port - move to config ?
+var port = process.env.PORT || 8083;
 
 // ==============
 //     Routes
@@ -66,13 +86,13 @@ router.route('/bears/:bear_id')
     })
     .put(function(req, res) {
         Bear.findById(req.params.bear_id, function(err, bear) {
-            
+
             if (err) {
                 req.send(err);
             }
 
             bear.name = req.body.name;
-            
+
             // save and check for errors
             bear.save(function(err){
                 if (err) {

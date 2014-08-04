@@ -27,6 +27,8 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
 
+app.set('view engine', 'ejs'); // set up ejs for templating
+
 // required for passport
 app.use(session({secret: 'aaaaaaaaaa'}));
 app.use(passport.initialize());

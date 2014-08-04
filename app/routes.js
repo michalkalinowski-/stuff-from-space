@@ -3,18 +3,14 @@ module.exports = function(router, passport) {
     // DB Models
     var Bear = require('./models/bear');
 
-    // middleware
-    // router.use(function(req, res, next) {
-    //     console.log("OMG! I'm on fire");
-    //     next();
-    // });
-
+    // -----------
     // Login stuff
+    // -----------
 
     // index
     router.route('/')
         .get(function(req, res) {
-            res.send('index.ejs');
+            res.render('index.ejs');
         });
 
     // login
@@ -44,7 +40,15 @@ module.exports = function(router, passport) {
         .get(function(req, res) {
             res.render('profile.ejs', { user : req.user });
         });
-        
+
+    // logout
+    router.route('logout')
+        .get(function(req, res) {
+            req.logout();
+            res.redirect('/');
+        });
+
+
     // Bear routes
     router.route('/api/bears')
         .post(function(req, res) {

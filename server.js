@@ -45,6 +45,7 @@ var port = process.env.PORT || 8083;
 var router = express.Router();
 
 require('./app/routes.js')(router, passport);
+require('./app/api_routes.js')(router, passport);
 
 // register the API Routes
 app.use('/', router);

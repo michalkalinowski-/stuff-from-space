@@ -58,4 +58,26 @@ module.exports = function(passport) {
         });
     }));
 
+    // login
+    passport.use('local-login', new LocalStrategy({
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true
+    },
+    function(req, email, password, done) {
+        User.findOne({ 'local.email' : email}, function(err, user) {
+            if (err) {
+                return done(err);
+            }
+
+            if(!user || !user.validPassword(password)) {
+                // if user is not found or wrong password
+                return done(null, false, req.flash('loginMessage', 'Oops! Wrong username or password.'));
+            }
+
+            // all is ok, return user
+            return done(null, user);
+        });
+    }));
+
 };

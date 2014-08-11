@@ -10,8 +10,12 @@ module.exports = function(router, passport) {
     router.route('/login')
         .get(function(req, res) {
             res.render('login.ejs', {message : req.flash("loginMessage")});
-        });
-    // do all passport processing stuff here
+        })
+        .post(passport.authenticate('local-login', {
+            successRedirect : '/profile',
+            failureRedirect : 'login',
+            failureFlash : true // allow flash messages
+        }));
 
     // signup
     router.route('/signup')

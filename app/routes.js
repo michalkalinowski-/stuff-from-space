@@ -17,14 +17,19 @@ module.exports = function(router, passport) {
     router.route('/signup')
         .get(function(req, res) {
             res.render('signup.ejs', {message : req.flash("signupMessage")});
-        });
+        })
+        .post(passport.authenticate('local-signup', {
+            successRedirect : '/profile',
+            failureRedirect : '/signup',
+            failureFlash : true
+        }));
 
     // ---  profile  ---
     // P R O T E C T E D
     // have to be logged in to access
     router.route('/profile')
         .all(function(req, res, next) {
-            if(req.isAuthenticarted()) {
+            if(req.isAuthenticated()) {
                 return next();
             }
             // if not logged in redirect to home
@@ -40,4 +45,4 @@ module.exports = function(router, passport) {
             req.logout();
             res.redirect('/');
         });
-}
+};

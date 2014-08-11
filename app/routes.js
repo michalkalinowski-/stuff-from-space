@@ -44,7 +44,7 @@ module.exports = function(router, passport) {
         });
 
     // logout
-    router.route('logout')
+    router.route('/logout')
         .get(function(req, res) {
             req.logout();
             res.redirect('/');
